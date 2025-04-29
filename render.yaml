@@ -5,3 +5,7 @@ services:
     plan: free
     buildCommand: ""
     startCommand: "python server.py"
+    envVars:
+      - key: PORT
+        value: 10000
+    autoDeploy: true
