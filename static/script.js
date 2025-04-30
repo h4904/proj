@@ -11,6 +11,17 @@ let touchStartY = 0;
 async function loadMaze() {
     const response = await fetch(`/maze/${level}`);
     const data = await response.json();
+
+    const map = document.getElementById('map');
+    map.innerHTML = '';
+
+
+    if (data.win) {
+        showOverlay("🏆 You Win the Game!", false);
+        return;
+    }
+    
+
     maze = data.maze;
     entities = data.entities;
     player.x = 0;
@@ -100,6 +111,20 @@ function handleCollision() {
                     showFlash("🔒 Need more Keys!");
                 }
             }
+            if (e.type === '🤖' && e.dialogue === 'Do you like this game?') {
+                showChoiceDialog(e.dialogue, e.options, (choice) => {
+                    if (e.effects[choice] === 'skip') {
+                        level++;
+                        showOverlay("🎁 Thank you! Skipping level...", true);
+                    } else if (e.effects[choice] === 'teleport_void') {
+                        goToVoidRoom(); // ไปห้องว่าง
+                    } else {
+                        showFlash("🤖 Hmm... interesting answer.");
+                    }
+                });
+            }
+            
+            
         }
     }
     if (player.health <= 0) {
@@ -203,22 +228,23 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Touch Controls
-document.addEventListener('touchstart', (e) => {
+document.addEventListener("touchstart", e => {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
 });
 
-document.addEventListener('touchend', (e) => {
-    const deltaX = e.changedTouches[0].clientX - touchStartX;
-    const deltaY = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        if (deltaX > 0) move('right');
-        else move('left');
+document.addEventListener("touchend", e => {
+    let dx = e.changedTouches[0].clientX - touchStartX;
+    let dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 30) move('right');
+        else if (dx < -30) move('left');
     } else {
-        if (deltaY > 0) move('down');
-        else move('up');
+        if (dy > 30) move('down');
+        else if (dy < -30) move('up');
     }
 });
+
 
 // 🔒 ป้องกันรีเฟรชหน้าจอโดยไม่ตั้งใจ (F5, Ctrl+R, swipe บนมือถือ)
 document.addEventListener('keydown', function (e) {

@@ -4,6 +4,18 @@ from collections import deque
 import os
 import time
 
+# Easter Egg Modules
+from easter_eggs.portal import create_time_portal, handle_time_portal
+from easter_eggs.unicorn import spawn_unicorn, handle_unicorn
+from easter_eggs.trap_room import generate_password, trap_room_triggered, create_hint
+from easter_eggs.wizard_npc import create_wizard, handle_wizard
+from easter_eggs.frog_npc import create_frog, handle_frog
+from easter_eggs.glitch_room import create_glitch_room
+from easter_eggs.quiz_room import create_quiz_room, handle_quiz_answer
+from easter_eggs.clown_npc import create_clown, handle_clown
+from easter_eggs.like_game_npc import create_like_game_npc
+
+
 # กำหนดอายุ log (วัน)
 LOG_RETENTION_DAYS = 1
 
@@ -89,6 +101,39 @@ def is_reachable(maze, start, targets):
                 queue.append((nx, ny))
     return found == targets
 
+
+def maybe_add_portal(maze, entities, used_positions, level):
+    if random.random() < 0.03:  # 3% chance
+        handle_time_portal(maze, entities, used_positions, level)
+
+def maybe_add_unicorn(maze, entities, used_positions, level):
+    if random.random() < 0.02:
+        handle_unicorn(maze, entities, used_positions)
+
+def maybe_add_glitch_room(maze, entities, used_positions, level):
+    if random.random() < 0.015:
+        create_glitch_room(maze, entities, used_positions)
+
+def maybe_add_wizard(maze, entities, used_positions, level):
+    if random.random() < 0.02:
+        handle_wizard(maze, entities, used_positions)
+
+def maybe_add_frog(maze, entities, used_positions, level):
+    if random.random() < 0.015:
+        handle_frog(maze, entities, used_positions, level)
+
+def maybe_add_quiz_room(maze, entities, used_positions, level):
+    if random.random() < 0.015:
+        create_quiz_room(maze, entities, used_positions)
+
+def maybe_add_clown(maze, entities, used_positions, level):
+    if random.random() < 0.01:
+        handle_clown(maze, entities, used_positions)
+
+def maybe_add_like_npc(maze, entities, used_positions, level):
+    if random.random() < 0.01:
+        create_like_game_npc(maze, entities, used_positions)
+
 # ------------------------------
 # Route หลัก
 # ------------------------------
@@ -107,10 +152,12 @@ def game():
 
 @app.route('/maze/<int:level>')
 def maze(level):
-    if level > 30:
+    FINAL_LEVEL = 30  # หรือ 20 ถ้าคุณต้องการจบที่ด่าน 20
+
+    if level > FINAL_LEVEL:
         return jsonify({'win': True})
 
-    size = min(9 + (level - 1), 14) #ปรับขนาดแผนที่
+    size = min(9 + (level - 1), 15) #ปรับขนาดแผนที่
     while True:
         maze = generate_maze(size)
         entities = []
@@ -184,6 +231,20 @@ def maze(level):
 
         if is_reachable(maze, (0, 0), important_targets):
             break
+
+    # --------------------------
+    # เพิ่ม Easter Eggs ถ้ามีโอกาสเกิด
+    # --------------------------
+    maybe_add_portal(maze, entities, used_positions, level)
+    maybe_add_unicorn(maze, entities, used_positions, level)
+    maybe_add_wizard(maze, entities, used_positions, level)
+    maybe_add_frog(maze, entities, used_positions, level)
+    maybe_add_glitch_room(maze, entities, used_positions, level)
+    maybe_add_quiz_room(maze, entities, used_positions, level)
+    maybe_add_clown(maze, entities, used_positions, level)
+    maybe_add_like_npc(maze, entities, used_positions, level)
+
+
 
     return jsonify({'maze': maze, 'entities': entities, 'level': level})
 
