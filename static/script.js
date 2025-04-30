@@ -10,20 +10,22 @@ let touchStartY = 0;
 
 async function loadMaze() {
     const response = await fetch(`/maze/${level}`);
+    if (!response.ok) {
+        console.error("Failed to load maze data");
+        return;
+    }
     const data = await response.json();
 
     const map = document.getElementById('map');
     map.innerHTML = '';
 
-
     if (data.win) {
         showOverlay("🏆 You Win the Game!", false);
         return;
     }
-    
 
-    maze = data.maze;
-    entities = data.entities;
+    maze = data.maze || [];
+    entities = data.entities || [];
     player.x = 0;
     player.y = 0;
     player.health = 3;
@@ -42,7 +44,8 @@ async function loadMaze() {
 function renderMaze() {
     const mazeDiv = document.getElementById('maze');
     mazeDiv.innerHTML = '';
-    mazeDiv.style.setProperty('--cols', maze[0].length); //เพิ่มปรับขนาด
+    if (!maze[0]) return;
+    mazeDiv.style.setProperty('--cols', maze[0].length);
     mazeDiv.style.gridTemplateColumns = `repeat(${maze[0].length}, 1fr)`;
     maze.forEach((row, y) => {
         row.forEach((cell, x) => {
@@ -111,20 +114,19 @@ function handleCollision() {
                     showFlash("🔒 Need more Keys!");
                 }
             }
-            if (e.type === '🤖' && e.dialogue === 'Do you like this game?') {
+            if (e.type === '🤖' && e.options && e.effects) {
                 showChoiceDialog(e.dialogue, e.options, (choice) => {
                     if (e.effects[choice] === 'skip') {
                         level++;
                         showOverlay("🎁 Thank you! Skipping level...", true);
                     } else if (e.effects[choice] === 'teleport_void') {
-                        goToVoidRoom(); // ไปห้องว่าง
+                        goToVoidRoom();
                     } else {
                         showFlash("🤖 Hmm... interesting answer.");
                     }
                 });
+                entities = entities.filter(en => en !== e);
             }
-            
-            
         }
     }
     if (player.health <= 0) {
@@ -160,7 +162,7 @@ function clearMonsterTimers() {
 
 function startMonsterMovement() {
     for (const e of entities) {
-        if (['👻', '👿', '🐲'].includes(e.type)) {
+        if (["👻", "👿", "🐲"].includes(e.type)) {
             let interval = 3000;
             let speed = 1;
             if (e.type === '👿') speed = 2;
@@ -219,7 +221,6 @@ function hideOverlay() {
     document.getElementById('overlay').style.display = 'none';
 }
 
-// Keyboard Controls
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp' || e.key === 'w') move('up');
     if (e.key === 'ArrowDown' || e.key === 's') move('down');
@@ -227,7 +228,6 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === 'd') move('right');
 });
 
-// Touch Controls
 document.addEventListener("touchstart", e => {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
@@ -245,18 +245,14 @@ document.addEventListener("touchend", e => {
     }
 });
 
-
-// 🔒 ป้องกันรีเฟรชหน้าจอโดยไม่ตั้งใจ (F5, Ctrl+R, swipe บนมือถือ)
 document.addEventListener('keydown', function (e) {
     if ((e.key === 'F5') || (e.ctrlKey && e.key.toLowerCase() === 'r')) {
-      e.preventDefault();
+        e.preventDefault();
     }
-  });
-  window.addEventListener('beforeunload', function (e) {
+});
+window.addEventListener('beforeunload', function (e) {
     e.preventDefault();
     e.returnValue = '';
-  });
-  
+});
 
-// Start the game
 loadMaze();
