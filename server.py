@@ -157,7 +157,7 @@ def maze(level):
     if level > FINAL_LEVEL:
         return jsonify({'win': True})
 
-    size = min(5 + (level - 1), 15) #ปรับขนาดแผนที่
+    size = min(14 + (level - 1), 20) #ปรับขนาดแผนที่
     while True:
         maze = generate_maze(size)
         entities = []
@@ -249,6 +249,6 @@ def maze(level):
     return jsonify({'maze': maze, 'entities': entities, 'level': level})
 
 import os
-port = int(os.environ.get("PORT", 5000))
+port = int(os.environ.get("PORT", 10000))
 app.run(host="0.0.0.0", port=port)
 
