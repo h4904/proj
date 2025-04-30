@@ -102,37 +102,27 @@ def is_reachable(maze, start, targets):
     return found == targets
 
 
-def maybe_add_portal(maze, entities, used_positions, level):
-    if random.random() < 0.03:  # 3% chance
-        handle_time_portal(maze, entities, used_positions, level)
+def maybe_add_one_easter_egg(maze, entities, used_positions, level):
+    options = [
+        ('portal', handle_time_portal, 0.03),
+        ('unicorn', handle_unicorn, 0.02),
+        ('glitch', create_glitch_room, 0.015),
+        ('wizard', handle_wizard, 0.02),
+        ('frog', handle_frog, 0.015),
+        ('quiz', create_quiz_room, 0.015),
+        ('clown', handle_clown, 0.01),
+        ('like_npc', create_like_game_npc, 0.01),
+    ]
 
-def maybe_add_unicorn(maze, entities, used_positions, level):
-    if random.random() < 0.02:
-        handle_unicorn(maze, entities, used_positions)
+    random.shuffle(options)  # สลับลำดับให้สุ่ม
+    for name, func, chance in options:
+        if random.random() < chance:
+            if name in ['portal', 'wizard', 'frog']:
+                func(maze, entities, used_positions, level)
+            else:
+                func(maze, entities, used_positions)
+            break  # ทำแค่ฟีเจอร์เดียวแล้วออกเลย
 
-def maybe_add_glitch_room(maze, entities, used_positions, level):
-    if random.random() < 0.015:
-        create_glitch_room(maze, entities, used_positions)
-
-def maybe_add_wizard(maze, entities, used_positions, level):
-    if random.random() < 0.02:
-        handle_wizard(maze, entities, used_positions)
-
-def maybe_add_frog(maze, entities, used_positions, level):
-    if random.random() < 0.015:
-        handle_frog(maze, entities, used_positions, level)
-
-def maybe_add_quiz_room(maze, entities, used_positions, level):
-    if random.random() < 0.015:
-        create_quiz_room(maze, entities, used_positions)
-
-def maybe_add_clown(maze, entities, used_positions, level):
-    if random.random() < 0.01:
-        handle_clown(maze, entities, used_positions)
-
-def maybe_add_like_npc(maze, entities, used_positions, level):
-    if random.random() < 0.01:
-        create_like_game_npc(maze, entities, used_positions)
 
 # ------------------------------
 # Route หลัก
@@ -235,16 +225,7 @@ def maze(level):
     # --------------------------
     # เพิ่ม Easter Eggs ถ้ามีโอกาสเกิด
     # --------------------------
-    maybe_add_portal(maze, entities, used_positions, level)
-    maybe_add_unicorn(maze, entities, used_positions, level)
-    maybe_add_wizard(maze, entities, used_positions, level)
-    maybe_add_frog(maze, entities, used_positions, level)
-    maybe_add_glitch_room(maze, entities, used_positions, level)
-    maybe_add_quiz_room(maze, entities, used_positions, level)
-    maybe_add_clown(maze, entities, used_positions, level)
-    maybe_add_like_npc(maze, entities, used_positions, level)
-
-
+        maybe_add_one_easter_egg(maze, entities, used_positions, level)
 
     return jsonify({'maze': maze, 'entities': entities, 'level': level})
 
