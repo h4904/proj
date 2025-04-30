@@ -157,7 +157,7 @@ def maze(level):
     if level > FINAL_LEVEL:
         return jsonify({'win': True})
 
-    size = min(14 + (level - 1), 20) #ปรับขนาดแผนที่
+    size = min(9 + (level - 1), 15) #ปรับขนาดแผนที่
     while True:
         maze = generate_maze(size)
         entities = []
