@@ -85,7 +85,7 @@ html, body {
   margin: 8px 0;
 }
 
-#status-bar {
+.status-bar {
   margin-top: 1rem;
   font-size: clamp(14px, 2.5vw, 20px);
   display: flex;
