@@ -16,8 +16,8 @@ async function loadMaze() {
     }
     const data = await response.json();
 
-    const map = document.getElementById('map');
-    map.innerHTML = '';
+    //const map = document.getElementById('map');
+    //map.innerHTML = '';
 
     if (data.win) {
         showOverlay("🏆 You Win the Game!", false);
