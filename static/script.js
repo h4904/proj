@@ -135,6 +135,7 @@ function handleCollision() {
     updateStatus();
 }
 
+
 function updateStatus() {
     document.getElementById('health').textContent = `♥️: ${player.health}`;
     document.getElementById('keys').textContent = `🗝️: ${player.keys}/3`;

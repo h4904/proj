@@ -13,8 +13,8 @@ html, body {
   font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
   background: #f0f0f0;
   position: relative; /* เดิม fixed → เปลี่ยนเป็น relative หรือเอาออก */
-  overflow-x: hidden;  /* ป้องกันการเลื่อนแนวนอน */
-  overflow-y: auto;
+  overflow-x: hidden;  /* ป้องกันการเลื่อนแนวนอน auto*/
+  overflow-y: hidden;
   touch-action: manipulation;
   padding: env(safe-area-inset);
 }
@@ -117,8 +117,13 @@ html, body {
 .tile {
   width: 100%;
   aspect-ratio: 1 / 1;
-  font-size: clamp(14px, 2.8vw, 22px);
-  text-align: center;
+  font-size: clamp(12px, 2.5vmin, 22px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.2rem;
+  transition: background 0.3s;
+  user-select: none;
 }
 
 
