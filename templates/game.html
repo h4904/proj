@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="/static/style.css">
 
   <style>
-    /* สำหรับ iOS Safe Area (เสริมไว้ในกรณี CSS โหลดช้า) */
     body {
       padding-top: env(safe-area-inset-top);
       padding-bottom: env(safe-area-inset-bottom);
@@ -43,9 +42,8 @@
   <div id="flash"></div>
   <div id="overlay"></div>
 
-  <script src="/static/script.js"></script>
   <script>
-    // ป้องกันรีเฟรชโดยไม่ได้ตั้งใจ (เช่น pinch zoom)
+    // ป้องกัน pinch zoom รีเฟรช
     document.addEventListener('touchmove', function(e) {
       if (e.touches.length > 1) {
         e.preventDefault();
@@ -57,6 +55,13 @@
         e.preventDefault();
       }
     }, { passive: false });
+
+    // โหลด script.js เมื่อ DOM พร้อม
+    document.addEventListener('DOMContentLoaded', () => {
+      const script = document.createElement('script');
+      script.src = '/static/script.js';
+      document.body.appendChild(script);
+    });
   </script>
 </body>
 </html>

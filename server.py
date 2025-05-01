@@ -142,7 +142,7 @@ def game():
 
 @app.route('/maze/<int:level>')
 def maze(level):
-    FINAL_LEVEL = 30  # หรือ 20 ถ้าคุณต้องการจบที่ด่าน 20
+    FINAL_LEVEL = 30  #คุณต้องการจบที่
 
     if level > FINAL_LEVEL:
         return jsonify({'win': True})
@@ -225,7 +225,7 @@ def maze(level):
     # --------------------------
     # เพิ่ม Easter Eggs ถ้ามีโอกาสเกิด
     # --------------------------
-        maybe_add_one_easter_egg(maze, entities, used_positions, level)
+    maybe_add_one_easter_egg(maze, entities, used_positions, level)
 
     return jsonify({'maze': maze, 'entities': entities, 'level': level})
 
