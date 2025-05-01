@@ -5,22 +5,37 @@
   box-sizing: border-box;
 }
 
-/* ตั้งค่าพื้นฐานของ body และ html */
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif; /* รองรับภาษาไทยด้วย */
+  font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
   background: #f0f0f0;
-  position: fixed;/* ล็อกตำแหน่ง */
-  overflow: auto; /* ปิด scroll (hidden)*/
-  touch-action: none; /* ป้องกันการ double-tap zoom บนอุปกรณ์ touch (manipulation)*/
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  position: relative; /* เดิม fixed → เปลี่ยนเป็น relative หรือเอาออก */
+  overflow-x: hidden;  /* ป้องกันการเลื่อนแนวนอน */
+  overflow-y: auto;
+  touch-action: manipulation;
+  padding: env(safe-area-inset);
 }
+
+
+/* ตั้งค่าพื้นฐานของ body และ html */
+/*html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif; /* รองรับภาษาไทยด้วย */
+/*  background: #f0f0f0;
+/*  position: fixed;/* ล็อกตำแหน่ง */
+/*  overflow: auto; /* ปิด scroll (hidden)*/
+/*  touch-action: none; /* ป้องกันการ double-tap zoom บนอุปกรณ์ touch (manipulation)*/
+/*  padding-top: env(safe-area-inset-top);
+/*  padding-bottom: env(safe-area-inset-bottom);
+/*  padding-left: env(safe-area-inset-left);
+/*  padding-right: env(safe-area-inset-right);*/
+/*}
 
 /* จัดหน้าให้อยู่ตรงกลางทั้งแนวตั้งและแนวนอน */
 .center-page {
@@ -91,17 +106,31 @@ html, body {
 
 #maze {
   display: grid;
-  grid-template-columns: repeat(var(--cols), 1fr);
-  width: 100%;
-  max-width: 100vw; /* ไม่ให้เกินขอบจอ */
+  grid-template-columns: repeat(var(--cols), minmax(24px, 1fr));
+  max-width: min(95vw, 100vh);
+  width: fit-content;
   margin: 0 auto;
   background-color: white;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   gap: 2px;
   padding: 10px;
-  box-sizing: border-box;
 }
+
+
+/*#maze {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  width: 100%;
+  max-width: 100vw; /* ไม่ให้เกินขอบจอ */
+/*  margin: 0 auto;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  gap: 2px;
+  padding: 10px;
+  box-sizing: border-box;
+}*/
 
 #maze > div {
   aspect-ratio: 1 / 1;
