@@ -15,7 +15,7 @@ html, body {
   position: relative; /* เดิม fixed → เปลี่ยนเป็น relative หรือเอาออก */
   overflow-x: hidden;  /* ป้องกันการเลื่อนแนวนอน auto*/
   overflow-y: hidden;
-  touch-action: manipulation;
+  touch-action: none;/*manipulation;*/
   padding: env(safe-area-inset);
 }
 

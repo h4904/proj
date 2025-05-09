@@ -114,18 +114,18 @@ function handleCollision() {
                     showFlash("🔒 Need more Keys!");
                 }
             }
-            if (e.type === '🤖' && e.options && e.effects) {
-                showChoiceDialog(e.dialogue, e.options, (choice) => {
-                    if (e.effects[choice] === 'skip') {
-                        level++;
-                        showOverlay("🎁 Thank you! Skipping level...", true);
-                    } else if (e.effects[choice] === 'teleport_void') {
-                        goToVoidRoom();
-                    } else {
-                        showFlash("🤖 Hmm... interesting answer.");
-                    }
-                });
-                entities = entities.filter(en => en !== e);
+            //if (e.type === '🤖' && e.options && e.effects) {
+            //    showChoiceDialog(e.dialogue, e.options, (choice) => {
+            //        if (e.effects[choice] === 'skip') {
+            //            level++;
+            //            showOverlay("🎁 Thank you! Skipping level...", true);
+            //        } else if (e.effects[choice] === 'teleport_void') {
+            //            goToVoidRoom();
+            //        } else {
+            //            showFlash("🤖 Hmm... interesting answer.");
+            //        }
+            //    });
+            //    entities = entities.filter(en => en !== e);//
             }
         }
     }
@@ -133,7 +133,6 @@ function handleCollision() {
         showOverlay("😵 You lose!", false);
     }
     updateStatus();
-}
 
 
 function updateStatus() {
@@ -255,5 +254,13 @@ window.addEventListener('beforeunload', function (e) {
     e.preventDefault();
     e.returnValue = '';
 });
+
+document.addEventListener("touchmove", function (e) {
+    const dy = e.touches[0].clientY - touchStartY;
+    if (Math.abs(dy) > 30) {
+        // ถ้าเลื่อนขึ้นหรือลง ให้ปิด default behavior
+        e.preventDefault();
+    }
+}, { passive: false });
 
 loadMaze();
