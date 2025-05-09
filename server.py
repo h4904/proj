@@ -199,31 +199,6 @@ def is_far_enough(pos, others, min_distance=2):
             return False
     return True
 
-def generate_items(map_data, num_items, min_distance=2):
-    height = len(map_data)
-    width = len(map_data[0])
-    items = []
-
-    attempts = 0
-    max_attempts = 1000  # เพื่อป้องกันลูปไม่จบ
-
-    while len(items) < num_items and attempts < max_attempts:
-        x = random.randint(1, width - 2)
-        y = random.randint(1, height - 2)
-        pos = (x, y)
-
-        if (
-            map_data[y][x] == " " and
-            pos not in items and
-            is_far_enough(pos, items, min_distance)
-        ):
-            items.append(pos)
-
-        attempts += 1
-
-    return items
-
-
 import os
 port = int(os.environ.get("PORT", 8080))
 app.run(host="0.0.0.0", port=port)
