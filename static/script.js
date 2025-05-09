@@ -263,4 +263,12 @@ document.addEventListener("touchmove", function (e) {
     }
 }, { passive: false });
 
+window.addEventListener('beforeunload', function (e) {
+    if (!gamePaused && player.health > 0) {
+        e.preventDefault();
+        e.returnValue = 'Are you sure?';
+    }
+});
+
+
 loadMaze();
